@@ -27,6 +27,7 @@ public class servletAlumnos extends HttpServlet {
 
     
     private ArrayList<String> grupos;
+    private ArrayList<Alumno> alumnos;
     private String rutaFicheros;
     
     
@@ -43,36 +44,7 @@ public class servletAlumnos extends HttpServlet {
     }
 
     
-    
-    
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        try {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet servletAlumnos</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet servletAlumnos at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        } finally {
-            out.close();
-        }
-    }
+
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -90,7 +62,7 @@ public class servletAlumnos extends HttpServlet {
         if (request.getParameter("grupo")!=null) {
             grupoSeleccionado = request.getParameter("grupo");
         }
-       ArrayList<Alumno> alumnos = Utilidades.getAlumnos(rutaFicheros.concat(File.separator).concat(grupoSeleccionado.replace(" ", "")).concat(".txt"));
+       alumnos = Utilidades.getAlumnos(rutaFicheros.concat(File.separator).concat(grupoSeleccionado.replace(" ", "")).concat(".txt"));
        request.setAttribute("grupos", grupos);
        request.setAttribute("grupo", grupoSeleccionado);
        request.setAttribute("alumnos", alumnos);
@@ -110,17 +82,34 @@ public class servletAlumnos extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String grupoSeleccionado = "2daw_a";
+        if (request.getParameter("grupo")!=null) {
+            
+            grupoSeleccionado = request.getParameter("grupo");
+        }
+        
+        int ultimoId = alumnos.get(alumnos.size()-1).getId();
+        ArrayList<Alumno> seleccionados = new ArrayList<Alumno>();
+        
+        for (int i = 0; i <= ultimoId; i++) {
+            if(request.getParameter(String.valueOf(i)) != null) {
+                for (Alumno alu : alumnos) {
+                    if (alu.getId() == i) {
+                        Alumno a = new Alumno(alu.getId(), alu.getNombre(), alu.getApellido(), alu.getEmail());
+                        seleccionados.add(a);
+                    }
+                }
+            }
+        }
+        
+        request.setAttribute("grupo", grupoSeleccionado);
+        request.setAttribute("alumnos", seleccionados);
+        request.getRequestDispatcher("mensajes.jsp").forward(request,response);
+        
+        
+        
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+    
 
 }

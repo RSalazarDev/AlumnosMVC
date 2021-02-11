@@ -12,12 +12,14 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     </head>
     <body>
         <div class="container">
             <h1>Alumnos de Bosco</h1>
             <%
                 String grupoActivo = (String) request.getAttribute("grupo");
+               
                 ArrayList<String> grupos = (ArrayList<String>) request.getAttribute("grupos");
                 ArrayList<Alumno> alumnos = (ArrayList<Alumno>) request.getAttribute("alumnos");
             %>
@@ -39,7 +41,7 @@
                 <input type="submit" value="Enviar">
             </form>
             <form  action="servletAlumnos" method="post">
-                <table style="margin: 10px;" class="table">
+                <table style="margin: 10px;" class="table table-dark">
                     <% for (Alumno alu : alumnos) {%>
                     <tr>
                         <td>
@@ -52,12 +54,12 @@
                             <%=alu.getEmail()%>
                         </td>
                         <td>
-                            <input type="checkbox" id="enviar" name="enviar" value="">
+                            <input type="checkbox" name="<%=alu.getId()%>" value="<%=alu.getId()%>"></td>
                         </td>
                     </tr>
                     <%}%>
                 </table>
-
+                
                 <input type="submit" value="Enviar">
             </form>
         </div>
